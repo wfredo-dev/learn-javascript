@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Messages</title>
+    <script defer src="messages.js"></script>
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100dvh;
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+
+        flex-direction: column;
+        gap: 2rem;
+      }
+      div > input,
+      button {
+        height: 2rem;
+        min-width: 7rem;
+      }
+      textarea {
+        height: 4rem;
+      }
+      p:hover {
+        background-color: rgba(0, 0, 0, 0.459);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <input type="text" id="message" placeholder="Enter your message..." />
+        <button id="sendBtn">Send</button>
+      </div>
+      <div id="text"></div>
+    </div>
+    <script></script>
+  </body>
+</html>
