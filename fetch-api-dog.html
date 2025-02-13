@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch api Dog</title>
+    <style>
+      img {
+        aspect-ratio: 16/9;
+        width: 70rem;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="getDog">Get a Dog</button>
+    <img id="displayDog" alt="A dog" />
+    <script>
+      document
+        .getElementById("getDog")
+        .addEventListener("click", async function () {
+          let response = await fetch("https://dog.ceo/api/breeds/image/random");
+          let dog = await response.json();
+          console.log(dog);
+          document.getElementById("displayDog").src = dog.message;
+        });
+    </script>
+  </body>
+</html>

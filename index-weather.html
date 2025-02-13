@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Api</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pacifico&display=swap");
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        font-family: "Montserrat", serif;
+        font-optical-sizing: auto;
+
+        min-height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .container {
+        padding: 4rem;
+        border-radius: 0.8rem;
+      }
+      #location {
+        font-weight: 700;
+        display: flex;
+        font-size: 2rem;
+      }
+      input,
+      button {
+        height: 1.8rem;
+        padding: 0.4rem;
+        align-items: center;
+      }
+      #location,
+      #weatherIcon,
+      #condition {
+        display: flex;
+        justify-content: center;
+      }
+      #condition {
+        margin-bottom: 2rem;
+      }
+      .errorDisplay {
+        display: flex;
+        justify-content: center;
+      }
+      h1 {
+        font-family: "Pacifico", serif;
+        font-weight: 400;
+      }
+      .upper {
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+      }
+      #suggestions {
+        position: absolute;
+      }
+      .hidden {
+        display: none;
+      }
+      svg {
+        height: 1rem;
+        width: 1rem;
+      }
+      button:hover {
+        background-color: black;
+        svg {
+          fill: white;
+        }
+      }
+      @media (max-width: 600px) {
+        body {
+          align-items: start;
+        }
+        .container {
+          padding: 1.5rem;
+        }
+      }
+      .darkMode {
+        color: white;
+        background-color: rgb(0, 0, 0);
+        .white {
+          fill: white;
+          &:hover {
+            fill: rgb(248, 160, 119);
+          }
+        }
+      }
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .toggle {
+        padding: 2rem;
+        svg {
+          width: 2rem;
+          height: 2rem;
+          &:hover {
+            fill: rgba(19, 18, 18, 0.514);
+          }
+        }
+      }
+      p {
+        line-height: 2rem;
+        margin: 1rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="top">
+        <h1>? Weather</h1>
+        <div class="toggle" id="toggle">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
+            class="white"
+          >
+            <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+            <path
+              d="M448 256c0-106-86-192-192-192l0 384c106 0 192-86 192-192zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div class="upper">
+        <input type="text" id="inputLocation" />
+        <ul id="suggestions" class="hidden"></ul>
+        <button id="getWeather">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+            <path
+              d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+            />
+          </svg>
+        </button>
+      </div>
+      <div id="weatherDisplay">
+        <p id="location"></p>
+        <p id="weatherIcon"><img alt="" id="weatherImage" /></p>
+        <p id="condition"></p>
+        <p id="temperature"></p>
+        <p id="heatIndex"></p>
+        <p id="humidity"></p>
+      </div>
+      <div class="errorDisplay">
+        <p id="errorDisplay"></p>
+      </div>
+    </div>
+    <script>
+      document.getElementById("toggle").addEventListener("click", function () {
+        document.body.classList.toggle("darkMode");
+      });
+      document
+        .getElementById("getWeather")
+        .addEventListener("click", async function () {
+          let key = "fa13a9b310b14ebf94223509251302";
+          let location = document.getElementById("inputLocation").value.trim();
+          let url = `http://api.weatherapi.com/v1/current.json?key=${key}&q=${location}&aqi=no`;
+
+          //   let response = await fetch(url);
+          //   let weather = await response.json();
+          //   console.log(weather);
+          //   console.log(weather.current.condition.text);
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.error) {
+                document.getElementById("inputLocation").value = " ";
+                throw new Error(data.error.message);
+              }
+              const { name, region, country } = data.location;
+              const {
+                heatindex_c,
+                humidity,
+                temp_c,
+                condition: { text, icon },
+              } = data.current;
+              document.getElementById("errorDisplay").innerHTML = "";
+              document.getElementById("location").innerText =
+                name + " " + region + " " + country;
+              document.getElementById("weatherImage").src = icon;
+              document.getElementById("condition").innerText = text;
+              document.getElementById("temperature").innerText =
+                "Temperature:  " + temp_c + "°C ";
+              document.getElementById("heatIndex").innerText =
+                "Heat Index:  " + heatindex_c + "°C ";
+              document.getElementById("humidity").innerText =
+                "Humidity:  " + humidity;
+
+              //   console.log("Location: ", name, region, country);
+              //   console.log("Condition: ", text);
+              //   console.log("Heat Index: ", heatindex_c);
+              //   console.log("Humidity: ", humidity);
+              //   console.log("Temperature: ", temp_c);
+            })
+            .catch((error) => {
+              document.getElementById("errorDisplay").innerHTML = error.message;
+              const elementToClear = [
+                "location",
+                "condition",
+                "temperature",
+                "heatIndex",
+                "humidity",
+              ];
+              elementToClear.forEach(
+                (element) => (document.getElementById(element).innerHTML = "")
+              );
+              document.getElementById("weatherImage").src = "";
+            });
+        });
+    </script>
+  </body>
+</html>
