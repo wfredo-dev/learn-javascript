@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feb 14 2025</title>
+  </head>
+  <body>
+    <script>
+      const cost = 20;
+      function Buyer(name, cart, money) {
+        this.name = name;
+        this.cart = cart;
+        this.money = money;
+        this.total = function () {
+          console.log("balance: ", this.money - cost);
+        };
+      }
+      const buyer = new Buyer("wil", "rice", 200);
+      const buyer2 = new Buyer("kit", "garlic", 300);
+      console.log(buyer);
+      buyer.total();
+      console.log(buyer2);
+    </script>
+  </body>
+</html>
